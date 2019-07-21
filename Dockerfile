@@ -1,6 +1,7 @@
 FROM golang:buster
 
 LABEL maintainer="Maurits van Altvorst <mvanaltvorst@icloud.com>"
+ENV GO111MODULE=on
 
 WORKDIR /go/src/github.com/mvanaltvorst/bedlightserver
 COPY . .
@@ -8,4 +9,4 @@ COPY . .
 RUN go get -d -v ./...
 RUN go install -v ./...
 
-CMD ["bedlightserver"]
+CMD ["./app/app"]
