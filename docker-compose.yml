@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  bedlightserver:
+    build: .
+    environment:
+      ESP8266IP: "192.168.178.173"
