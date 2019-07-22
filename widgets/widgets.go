@@ -11,6 +11,6 @@ type Widget interface {
 type LightMessage struct {
 	Color  types.Color
 	Rng    types.Range
-	Lit    bool
+	Clear  bool
 	Smooth bool
 }

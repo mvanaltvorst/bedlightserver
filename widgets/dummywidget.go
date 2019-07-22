@@ -1,8 +1,9 @@
 package widgets
 
 import (
-	"github.com/mvanaltvorst/bedlightserver/types"
 	"log"
+
+	"github.com/mvanaltvorst/bedlightserver/types"
 )
 
 type DummyWidget struct {
@@ -25,7 +26,7 @@ func (d *DummyWidget) Update() {
 	if d.lit {
 		return
 	}
-	d.c <- LightMessage{d.color, d.rng, true, false}
+	d.c <- LightMessage{d.color, d.rng, false, false}
 	log.Println("Sending light message")
 	d.lit = true
 }

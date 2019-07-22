@@ -2,9 +2,10 @@ package ledstrip
 
 import (
 	"fmt"
-	"github.com/mvanaltvorst/bedlightserver/types"
 	"log"
 	"net/http"
+
+	"github.com/mvanaltvorst/bedlightserver/types"
 )
 
 type Strip struct {
@@ -46,6 +47,38 @@ func (s *Strip) TurnOff() error {
 		return fmt.Errorf("didn't get 201 at turnOff(), got %d instread", resp.StatusCode)
 	}
 	log.Println("turnOff() succeeded")
+	return nil
+}
+
+func (s *Strip) Flush() error {
+	resp, err := http.Post(
+		s.httpbase+"/flush",
+		"application/x-www-form-urlencoded",
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("didn't get 201 at Flush(), got %d instread", resp.StatusCode)
+	}
+	log.Println("Flush() succeeded")
+	return nil
+}
+
+func (s *Strip) Gradient() error {
+	resp, err := http.Post(
+		s.httpbase+"/gradient",
+		"application/x-www-form-urlencoded",
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("didn't get 201 at Gradient(), got %d instread", resp.StatusCode)
+	}
+	log.Println("Gradient() succeeded")
 	return nil
 }
 
@@ -116,7 +149,7 @@ func (s *Strip) SetRange(color types.Color, rng types.Range) error {
 
 func (s *Strip) ClearRange(rng types.Range) error {
 	resp, err := http.Post(
-		fmt.Sprintf("%s/setRange?ns=%d&ne=%d", s.httpbase, rng.NStart, rng.NEnd),
+		fmt.Sprintf("%s/clearRange?ns=%d&ne=%d", s.httpbase, rng.NStart, rng.NEnd),
 		"application/x-www-form-urlencoded",
 		nil,
 	)

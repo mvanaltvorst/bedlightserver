@@ -8,6 +8,11 @@ import (
 	"github.com/piquette/finance-go/quote"
 )
 
+var (
+	COLOR_UP   = types.Color{0, 255, 0}
+	COLOR_DOWN = types.Color{255, 0, 0}
+)
+
 type StockWidget struct {
 	rng    types.Range
 	c      chan LightMessage
@@ -43,8 +48,8 @@ func (w *StockWidget) Update() {
 	}
 	log.Println(w.symbol, ": ", marketChange)
 	if marketChange > 0 {
-		w.c <- LightMessage{types.Color{0, 255, 0}, w.rng, true, false}
+		w.c <- LightMessage{COLOR_UP, w.rng, false, false}
 	} else {
-		w.c <- LightMessage{types.Color{255, 0, 0}, w.rng, true, false}
+		w.c <- LightMessage{COLOR_DOWN, w.rng, false, false}
 	}
 }

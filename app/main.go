@@ -14,15 +14,13 @@ func watch(strip *ledstrip.Strip, c chan widgets.LightMessage) {
 	var err error
 	for lm := range c {
 		log.Println("Received message: ", lm)
-		if lm.Lit {
-			err = strip.SetRange(lm.Color, lm.Rng)
+		if lm.Clear {
+			err = strip.ClearRange(lm.Rng)
 			if err != nil {
 				log.Panic(err)
 			}
-			// strip.SetLed(types.Color{lm.Color.R/2 + 5, lm.Color.G/2 + 5, lm.Color.B/2 + 5}, lm.Rng.NStart)
-			// strip.SetLed(types.Color{lm.Color.R/30 + 5, lm.Color.G/30 + 5, lm.Color.B/30 + 5}, lm.Rng.NEnd)
 		} else {
-			err = strip.ClearRange(lm.Rng)
+			err = strip.SetRange(lm.Color, lm.Rng)
 			if err != nil {
 				log.Panic(err)
 			}
@@ -36,8 +34,8 @@ func main() {
 	}
 	strip := ledstrip.NewStrip(os.Getenv("ESP8266IP"))
 
-	strip.ClearRange(types.Range{0, 149})
 	strip.SetBgColor(types.Color{10, 10, 10})
+	strip.ClearRange(types.Range{0, 149})
 	strip.TurnOn()
 
 	c := make(chan widgets.LightMessage)
@@ -45,15 +43,26 @@ func main() {
 
 	widgets := []widgets.Widget{
 		widgets.NewWeatherWidget(c, types.Range{2, 10}),
-		widgets.NewStockWidget(c, types.Range{0, 2}, "ETH-USD", true),
-		widgets.NewStockWidget(c, types.Range{12, 16}, "BTC-USD", true),
-		widgets.NewStockWidget(c, types.Range{20, 25}, "TSLA", false),
+		widgets.NewStockWidget(c, types.Range{0, 1}, "ETH-USD", true),
+		widgets.NewStockWidget(c, types.Range{11, 16}, "BTC-USD", true),
+		widgets.NewStockWidget(c, types.Range{20, 25}, "GOOG", false),
+		widgets.NewCalendarWidget(c, types.Range{26, 26 + 96 - 1}, true),
 	}
 
 	for {
 		for _, widget := range widgets {
 			widget.Update()
 		}
-		time.Sleep(300 * time.Second)
+		time.Sleep(10 * time.Millisecond) // TODO: use waitgroup
+		strip.Gradient()
+
+		t := time.Now()
+		roundedMinute := ((t.Minute() + 1) / 15) * 15
+		nextTick := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), roundedMinute, 0, 0, t.Location())
+		nextTick = nextTick.Add(15 * time.Minute)
+
+		toWait := nextTick.Sub(t)
+		log.Println("Sleeping for ", toWait)
+		time.Sleep(toWait)
 	}
 }

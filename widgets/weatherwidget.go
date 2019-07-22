@@ -71,5 +71,5 @@ func (w *WeatherWidget) Update() {
 	if err != nil {
 		log.Panic(err)
 	}
-	w.c <- LightMessage{weatherColor, w.rng, true, false}
+	w.c <- LightMessage{weatherColor, w.rng, false, false}
 }
