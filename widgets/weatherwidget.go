@@ -15,7 +15,7 @@ import (
 var (
 	COLOR_RAIN   = types.Color{0, 179, 255}
 	COLOR_CLOUDY = types.Color{75, 0, 130}
-	COLOR_SUNNY  = types.Color{255, 255, 0}
+	COLOR_SUNNY  = types.Color{253, 184, 19}
 )
 
 func GetWeatherColor() (types.Color, error) {

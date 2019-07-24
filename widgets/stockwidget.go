@@ -18,7 +18,6 @@ type StockWidget struct {
 	c      chan LightMessage
 	symbol string
 	crypto bool
-	// lastChecked time.
 }
 
 func NewStockWidget(c chan LightMessage, rng types.Range, symbol string, crypto bool) *StockWidget {

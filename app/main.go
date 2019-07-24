@@ -34,7 +34,8 @@ func main() {
 	}
 	strip := ledstrip.NewStrip(os.Getenv("ESP8266IP"))
 
-	strip.SetBgColor(types.Color{10, 10, 10})
+	// strip.SetBgColor(types.Color{255, 255, 255})
+	strip.SetBgColor(types.Color{255, 147, 41})
 	strip.ClearRange(types.Range{0, 149})
 	strip.TurnOn()
 
@@ -42,11 +43,11 @@ func main() {
 	go watch(strip, c)
 
 	widgets := []widgets.Widget{
-		widgets.NewWeatherWidget(c, types.Range{2, 10}),
-		widgets.NewStockWidget(c, types.Range{0, 1}, "ETH-USD", true),
-		widgets.NewStockWidget(c, types.Range{11, 16}, "BTC-USD", true),
-		widgets.NewStockWidget(c, types.Range{20, 25}, "GOOG", false),
-		widgets.NewCalendarWidget(c, types.Range{26, 26 + 96 - 1}, true),
+		// widgets.NewStockWidget(c, types.Range{0, 15}, "ETH-USD", true),
+		// widgets.NewStockWidget(c, types.Range{16, 30}, "BTC-USD", true),
+		widgets.NewWeatherWidget(c, types.Range{70, 90}),
+		widgets.NewStockWidget(c, types.Range{0, 17}, "GOOG", false),
+		widgets.NewCalendarWidget(c, types.Range{18, 69}, false),
 	}
 
 	for {

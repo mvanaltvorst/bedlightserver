@@ -19,10 +19,8 @@ func NewStrip(ipaddr string) *Strip {
 }
 
 func (s *Strip) TurnOn() error {
-	resp, err := http.Post(
-		s.httpbase+"/turnOn",
-		"application/x-www-form-urlencoded",
-		nil,
+	resp, err := http.Get(
+		s.httpbase + "/turnOn",
 	)
 	if err != nil {
 		return err
@@ -35,10 +33,8 @@ func (s *Strip) TurnOn() error {
 }
 
 func (s *Strip) TurnOff() error {
-	resp, err := http.Post(
-		s.httpbase+"/turnOff",
-		"application/x-www-form-urlencoded",
-		nil,
+	resp, err := http.Get(
+		s.httpbase + "/turnOff",
 	)
 	if err != nil {
 		return err
@@ -51,10 +47,8 @@ func (s *Strip) TurnOff() error {
 }
 
 func (s *Strip) Flush() error {
-	resp, err := http.Post(
-		s.httpbase+"/flush",
-		"application/x-www-form-urlencoded",
-		nil,
+	resp, err := http.Get(
+		s.httpbase + "/flush",
 	)
 	if err != nil {
 		return err
@@ -67,10 +61,8 @@ func (s *Strip) Flush() error {
 }
 
 func (s *Strip) Gradient() error {
-	resp, err := http.Post(
-		s.httpbase+"/gradient",
-		"application/x-www-form-urlencoded",
-		nil,
+	resp, err := http.Get(
+		s.httpbase + "/gradient",
 	)
 	if err != nil {
 		return err
@@ -83,10 +75,8 @@ func (s *Strip) Gradient() error {
 }
 
 func (s *Strip) SetLed(color types.Color, n int) error {
-	resp, err := http.Post(
+	resp, err := http.Get(
 		fmt.Sprintf("%s/setLed?r=%d&g=%d&b=%d&n=%d", s.httpbase, color.R, color.G, color.B, n),
-		"application/x-www-form-urlencoded",
-		nil,
 	)
 	if err != nil {
 		return err
@@ -99,10 +89,8 @@ func (s *Strip) SetLed(color types.Color, n int) error {
 }
 
 func (s *Strip) ClearLed(n int) error {
-	resp, err := http.Post(
+	resp, err := http.Get(
 		fmt.Sprintf("%s/clearLed?n=%d", s.httpbase, n),
-		"application/x-www-form-urlencoded",
-		nil,
 	)
 	if err != nil {
 		return err
@@ -116,10 +104,8 @@ func (s *Strip) ClearLed(n int) error {
 
 // setBgColor sets the background color of the strip
 func (s *Strip) SetBgColor(color types.Color) error {
-	resp, err := http.Post(
+	resp, err := http.Get(
 		fmt.Sprintf("%s/setBgColor?r=%d&g=%d&b=%d", s.httpbase, color.R, color.G, color.B),
-		"application/x-www-form-urlencoded",
-		nil,
 	)
 	if err != nil {
 		return err
@@ -132,10 +118,8 @@ func (s *Strip) SetBgColor(color types.Color) error {
 }
 
 func (s *Strip) SetRange(color types.Color, rng types.Range) error {
-	resp, err := http.Post(
+	resp, err := http.Get(
 		fmt.Sprintf("%s/setRange?r=%d&g=%d&b=%d&ns=%d&ne=%d", s.httpbase, color.R, color.G, color.B, rng.NStart, rng.NEnd),
-		"application/x-www-form-urlencoded",
-		nil,
 	)
 	if err != nil {
 		return err
@@ -148,10 +132,8 @@ func (s *Strip) SetRange(color types.Color, rng types.Range) error {
 }
 
 func (s *Strip) ClearRange(rng types.Range) error {
-	resp, err := http.Post(
+	resp, err := http.Get(
 		fmt.Sprintf("%s/clearRange?ns=%d&ne=%d", s.httpbase, rng.NStart, rng.NEnd),
-		"application/x-www-form-urlencoded",
-		nil,
 	)
 	if err != nil {
 		return err
