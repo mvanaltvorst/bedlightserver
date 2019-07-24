@@ -5,7 +5,8 @@ ENV GO111MODULE=on
 
 WORKDIR /go/src/github.com/mvanaltvorst/bedlightserver
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git tzdata
+RUN ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
 COPY . .
 
