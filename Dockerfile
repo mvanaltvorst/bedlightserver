@@ -1,4 +1,4 @@
-FROM golang:buster
+FROM golang:alpine
 
 LABEL maintainer="Maurits van Altvorst <mvanaltvorst@icloud.com>"
 ENV GO111MODULE=on
