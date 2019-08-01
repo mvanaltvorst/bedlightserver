@@ -12,5 +12,4 @@ type LightMessage struct {
 	Color  types.Color
 	Rng    types.Range
 	Clear  bool
-	Smooth bool
 }

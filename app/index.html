@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>Bedlight</title>
+        <style>
+            #controls {
+                float: left;
+                width: 300px;
+            }
+
+            #colors {
+                float: right;
+                width: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <iframe style="display:none" name="hidden-form"></iframe>  
+        <div id="controls">
+            <ul>
+                <li>
+                    <form action="/turnOn" target="hidden-form">
+                        <input type="submit" value="Turn on" />
+                    </form>
+                </li>
+                <li>
+                    <form action="/turnOff" target="hidden-form">
+                        <input type="submit" value="Turn off" />
+                    </form>
+                </li>
+                <li>
+                    <form action="/readingLight" target="hidden-form">
+                        <input type="submit" value="Reading light" />
+                    </form>
+                </li>
+
+                <li>
+                    <form action="/interactiveLight" target="hidden-form">
+                        <input type="submit" value="Interactive light" />
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <div id="colors">
+            <ul>
+                <li>
+                    <form action="/bgColor" target="hidden-form">
+                        <input type="hidden" name="r" value="255" />
+                        <input type="hidden" name="g" value="255" />
+                        <input type="hidden" name="b" value="255" />
+                        <input type="submit" value="White light" />
+                    </form>
+                </li>
+                <li>
+                    <form action="/bgColor" target="hidden-form">
+                        <input type="hidden" name="r" value="255" />
+                        <input type="hidden" name="g" value="147" />
+                        <input type="hidden" name="b" value="41" />
+                        <input type="submit" value="Warm light" />
+                    </form>
+                </li>
+                <li>
+                    <form action="/bgColor" target="hidden-form">
+                        <input type="hidden" name="r" value="255" />
+                        <input type="hidden" name="g" value="138" />
+                        <input type="hidden" name="b" value="18" />
+                        <input type="submit" value="Very warm light" />
+                    </form>
+                </li>
+                <li>
+                    <form action="/bgColor" target="hidden-form">
+                        <input type="hidden" name="r" value="255" />
+                        <input type="hidden" name="g" value="71" />
+                        <input type="hidden" name="b" value="0" />
+                        <input type="submit" value="Orange light (zero blue)" />
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <!-- TODO: brightness -->
+        
+    </body>
+</html>

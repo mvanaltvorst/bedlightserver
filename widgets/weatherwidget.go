@@ -8,14 +8,15 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-
 	"github.com/mvanaltvorst/bedlightserver/types"
+	"errors"
 )
 
 var (
 	COLOR_RAIN   = types.Color{0, 179, 255}
 	COLOR_CLOUDY = types.Color{75, 0, 130}
 	COLOR_SUNNY  = types.Color{253, 184, 19}
+	COLOR_ERROR_WEATHER = types.Color{255, 0, 0}
 )
 
 func GetWeatherColor() (types.Color, error) {
@@ -31,9 +32,9 @@ func GetWeatherColor() (types.Color, error) {
 		scanner := bufio.NewScanner(resp.Body)
 		for scanner.Scan() {
 			rainStrs := strings.Split(scanner.Text(), "|")
-			// if err != nil {
-			// 	return types.Color{}, err
-			// }
+			if len(rainStrs) == 0 {
+				return types.Color{}, errors.New("Got invalid rain response")
+			}
 			rain, err := strconv.Atoi(rainStrs[0])
 			if err != nil {
 				return types.Color{}, err
@@ -69,7 +70,9 @@ func (w *WeatherWidget) Update() {
 	log.Println("Updating weather...")
 	weatherColor, err := GetWeatherColor()
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
+		w.c <- LightMessage{COLOR_ERROR_WEATHER, w.rng, false}
+	} else {
+		w.c <- LightMessage{weatherColor, w.rng, false}
 	}
-	w.c <- LightMessage{weatherColor, w.rng, false, false}
 }
