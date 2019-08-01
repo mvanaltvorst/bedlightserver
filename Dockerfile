@@ -1,4 +1,4 @@
-FROM arm32v6/golang:alpine
+FROM golang:alpine
 
 LABEL maintainer="Maurits van Altvorst <mvanaltvorst@icloud.com>"
 ENV GO111MODULE=on

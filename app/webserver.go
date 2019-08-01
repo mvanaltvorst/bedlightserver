@@ -9,7 +9,7 @@ import (
 	"github.com/mvanaltvorst/bedlightserver/types"
 )
 
-var templates = template.Must(template.ParseFiles("index.html"))
+var templates = template.Must(template.ParseFiles("/go/src/github.com/mvanaltvorst/bedlightserver/app/index.html"))
 
 func webserverManager() {
 	http.HandleFunc("/", indexHandler)

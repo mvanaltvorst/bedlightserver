@@ -10,6 +10,7 @@ import (
 	"strings"
 	"github.com/mvanaltvorst/bedlightserver/types"
 	"errors"
+	"io/ioutil"
 )
 
 var (
@@ -19,8 +20,8 @@ var (
 	COLOR_ERROR_WEATHER = types.Color{255, 0, 0}
 )
 
-func GetWeatherColor() (types.Color, error) {
-	resp, err := http.Get("https://gpsgadget.buienradar.nl/data/raintext/?lat=52.26&lon=5.23")
+func GetWeatherColor(latitude, longitude string) (types.Color, error) {
+	resp, err := http.Get(fmt.Sprintf("https://gpsgadget.buienradar.nl/data/raintext/?lat=%s&lon=%s", latitude, longitude))
 	if err != nil {
 		return types.Color{}, err
 	}
@@ -56,19 +57,30 @@ func GetWeatherColor() (types.Color, error) {
 type WeatherWidget struct {
 	rng types.Range
 	c   chan LightMessage
-	// lastChecked time.
+	latitude string
+	longitude string
 }
 
 func NewWeatherWidget(c chan LightMessage, rng types.Range) *WeatherWidget {
 	w := new(WeatherWidget)
 	w.rng = rng
 	w.c = c
+	binarycoords, err := ioutil.ReadFile("/run/secrets/weather_coordinates") 
+	if err != nil {
+		log.Fatal("Couldn't read docker secret", err)
+	}
+	coords := strings.Split(string(binarycoords), ":")
+	if len(coords) != 2 {
+		log.Fatal("Didn't get valid coordinates configuration file, be sure to use LATITUDE:LONGITUDE in the `coordinates` file")
+	}
+	w.latitude = coords[0]
+	w.longitude = coords[1]
 	return w
 }
 
 func (w *WeatherWidget) Update() {
 	log.Println("Updating weather...")
-	weatherColor, err := GetWeatherColor()
+	weatherColor, err := GetWeatherColor(w.latitude, w.longitude)
 	if err != nil {
 		log.Println(err)
 		w.c <- LightMessage{COLOR_ERROR_WEATHER, w.rng, false}

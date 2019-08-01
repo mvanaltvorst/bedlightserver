@@ -4,4 +4,10 @@ services:
   bedlightserver:
     build: .
     environment:
-      ESP8266IP: "192.168.178.151"
+      ESP8266IP: "192.168.178.171"
+    secrets:
+      - weather_coordinates
+
+secrets:
+  weather_coordinates:
+    file: coordinates
