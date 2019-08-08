@@ -17,6 +17,7 @@ var (
 	COLOR_RAIN   = types.Color{0, 179, 255}
 	COLOR_CLOUDY = types.Color{75, 0, 130}
 	COLOR_SUNNY  = types.Color{253, 184, 19}
+	// COLOR_SUNNY = types.Color{0, 179, 255}
 	COLOR_ERROR_WEATHER = types.Color{255, 0, 0}
 )
 

@@ -8,6 +8,8 @@ WORKDIR /go/src/github.com/mvanaltvorst/bedlightserver
 RUN apk add --no-cache git tzdata
 RUN ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
+EXPOSE 8080
+
 COPY . .
 
 RUN go get -d -v ./...
