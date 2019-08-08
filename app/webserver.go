@@ -12,7 +12,8 @@ import (
 var templates = template.Must(template.ParseFiles("/go/src/github.com/mvanaltvorst/bedlightserver/app/index.html"))
 
 func webserverManager() {
-	http.HandleFunc("/", indexHandler)
+	fs := http.FileServer(http.Dir("./bedlightwebserver/build"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/turnOn", turnOnHandler)
 	http.HandleFunc("/turnOff", turnOffHandler)
 	http.HandleFunc("/readingLight", readingLightHandler)

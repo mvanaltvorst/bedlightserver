@@ -1,8 +1,58 @@
+/* body, html {
+  position: fixed;
+  width: 100%;
+} */
+
+#root {
+  width: 100%;
+}
+
 .App {
   /* text-align: center; */
   padding: 30px;
+  padding-top: 8px;
 }
 
 h1 {
-  margin-top: 0px;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
+
+.View {
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  /* padding: 30px; */
+  /* border: 1px solid #efefef; */
+  /* box-shadow: 2px 6px 25px rgba(0, 0, 0, 0.1); */
+}
+
+.ColorControlsButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.OnOffControls {
+  margin-top: 0;
+}
+
+.InteractiveControls {
+  margin-bottom: 20px;
+}
+
+.OnOffControls button {
+  width: 50%;
+}
+
+.InteractiveControls button {
+  width: 50%;
+}
+
+.ColorControls {
+  margin-top: 0;
+}
+/* 
+button {
+  width: 100%;
+} */

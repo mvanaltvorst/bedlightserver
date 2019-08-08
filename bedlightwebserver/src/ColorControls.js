@@ -24,13 +24,23 @@ class ColorControls extends React.Component {
 
     render() {
         return (
-            <div className="ColorControls" style={ { marginTop: "30px" } } >
+            <div className="ColorControls">
                 <SketchPicker 
                     color={ this.props.bgColor }
                     onChangeComplete={ this.handleColorChange }
+                    disableAlpha={ true }
+                    width={ "95%" }
+                    // styles={
+                    //     {
+                    //         "width": "100%"
+                    //     }
+                    // }
                 />
                 <br/>
-                <input type="checkbox" defaultChecked={ this.state.liveUpdate } onChange={ this.handleChangeLiveUpdate }/> Live update
+                <div className="ColorControlsButtons">
+                    <span><input type="checkbox" defaultChecked={ this.state.liveUpdate } onChange={ this.handleChangeLiveUpdate }/> Live update </span>
+                    <button onClick={ this.props.updateColor }>Refresh</button>
+                </div>
             </div>
         );
     }

@@ -17,12 +17,13 @@ class App extends React.Component {
     this.handleInteractiveChange = this.handleInteractiveChange.bind(this);
     this.updateColor = this.updateColor.bind(this);
 
-    this.api = new Api(window.location.href);
+    this.api = new Api(window.location.origin);
   }
 
   handlePowerChange(turnedOn) {
     console.log(`Turning ${turnedOn ? "on" : "off"}`)
     this.setState({ turnedOn: turnedOn });
+    turnedOn ? this.api.turnOn() : this.api.turnOff();
   }
 
   handleColorChange(color) {
@@ -33,6 +34,7 @@ class App extends React.Component {
   handleInteractiveChange(interactive) {
     console.log(`Turning interactive ${interactive ? "on" : "off"}`)
     this.setState({ interactiveMode: interactive });
+    interactive ? this.api.setInteractive() : this.api.setReadingLight();
   } 
 
   updateColor() {
