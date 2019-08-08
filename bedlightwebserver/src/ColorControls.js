@@ -1,6 +1,20 @@
 import React from 'react';
 import { SketchPicker } from 'react-color';
 
+const PRESET_COLORS = [
+    '#000000', 
+    '#FFFFFF',
+    '#D0021B', 
+    '#F5A623', 
+    '#F8E71C', 
+    '#7ED321', 
+    '#93F927',
+    '#BD10E0', 
+    '#9013FE', 
+    '#4A90E2', 
+    '#50E3C2'
+]
+
 class ColorControls extends React.Component {
     constructor(props) {
         super(props);
@@ -30,11 +44,7 @@ class ColorControls extends React.Component {
                     onChangeComplete={ this.handleColorChange }
                     disableAlpha={ true }
                     width={ "95%" }
-                    // styles={
-                    //     {
-                    //         "width": "100%"
-                    //     }
-                    // }
+                    presetColors={ PRESET_COLORS }
                 />
                 <br/>
                 <div className="ColorControlsButtons">

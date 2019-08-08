@@ -51,6 +51,16 @@ h1 {
 
 .ColorControls {
   margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.Alarms table {
+  width: 50%;
+}
+
+.Alarms tr {
+  display: flex;
+  justify-content: space-between;
 }
 /* 
 button {

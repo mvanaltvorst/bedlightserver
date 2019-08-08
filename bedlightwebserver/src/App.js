@@ -10,14 +10,21 @@ class App extends React.Component {
       bgColor: {r: 255, g: 255, b: 255},
       turnedOn: true,
       interactiveMode: true,
+      alarms: [],
     };
 
     this.handlePowerChange = this.handlePowerChange.bind(this);
     this.handleColorChange = this.handleColorChange.bind(this);
     this.handleInteractiveChange = this.handleInteractiveChange.bind(this);
     this.updateColor = this.updateColor.bind(this);
+    this.handleAlarmToggle = this.handleAlarmToggle.bind(this);
 
     this.api = new Api(window.location.origin);
+  }
+
+  handleAlarmToggle(e) {
+    const checked = e.target.checked
+    const id = e.target.identifier
   }
 
   handlePowerChange(turnedOn) {
@@ -54,6 +61,7 @@ class App extends React.Component {
           onColorChange={ this.handleColorChange }
           onInteractiveChange={ this.handleInteractiveChange }
           updateColor={ this.updateColor }
+          onAlarmToggle={ this.handleAlarmToggle }
         />
       </div>
     );

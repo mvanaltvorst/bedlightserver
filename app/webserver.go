@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/mvanaltvorst/bedlightserver/types"
+	"github.com/mvanaltvorst/bedlightserver/alarms"
 )
 
 var templates = template.Must(template.ParseFiles("/go/src/github.com/mvanaltvorst/bedlightserver/app/index.html"))
