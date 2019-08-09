@@ -1,1 +1,1 @@
-[Read more about this project here](https://mauritsvanaltvorst.com/bedlight/).
+[Read more about this project here](https://www.mauritsvanaltvorst.com/bedlight/).
