@@ -13,7 +13,11 @@ class View extends React.Component {
                 <InteractiveControls onInteractiveChange={ this.props.onInteractiveChange } />
                 <ColorControls bgColor={ this.props.bgColor } onColorChange={ this.props.onColorChange } updateColor={ this.props.updateColor }/>
                 <h1>Alarms</h1>
-                <Alarms onAlarmToggle={ this.props.onAlarmToggle } selectedColor={ this.props.bgColor }/>
+                <Alarms 
+                    alarms={ this.props.alarms }
+                    updateAlarm={ this.props.updateAlarm }
+                    selectedColor={ this.props.bgColor }
+                />
             </div>
         );
     }

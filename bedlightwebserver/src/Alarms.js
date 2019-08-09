@@ -1,61 +1,118 @@
 import React from 'react';
 
+
+function AlarmRow(props) {
+    let row = props.row;
+    return (
+        <tr>
+            <td>
+                { `${row.time.hour}:${row.time.minute}` }
+            </td>
+            <td>
+                <div 
+                    className="ColorBox" 
+                    style={{
+                        backgroundColor: `rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`,
+                        width: '30px',
+                        height: '12px',
+                        display: 'inline-block',
+                    }}
+                />
+            </td>
+            <td>
+                <input type="checkbox" data-id={ row.id } checked={row.interactive} onChange={ props.onAlarmInteractiveToggle }/>
+            </td>
+            <td>
+                <input type="checkbox" data-id={ row.id } checked={row.enabled} onChange={ props.onAlarmEnabledToggle }/>
+            </td>
+            <td>
+                <button>Remove</button>
+            </td>
+        </tr>
+    );
+}
+
 class Alarms extends React.Component {
     constructor(props) {
         super(props)
 
         this.addAlarm = this.addAlarm.bind(this);
+        this.onAlarmEnabledToggle = this.onAlarmEnabledToggle.bind(this);
+        this.onAlarmInteractiveToggle = this.onAlarmInteractiveToggle.bind(this);
+    }
+
+    findAlarmIndexById(id) {
+        let nalarms = this.props.alarms.length
+        for (let i = 0; i < nalarms; i++) {
+            console.log(this.props.alarms[i].id, " ", id);
+            if (this.props.alarms[i].id == id) {
+                return i;
+            }
+        }
     }
 
     addAlarm() {
+        // this.props.alarms
+    }
 
+    onAlarmEnabledToggle(e) {
+        let id = parseInt(e.target.getAttribute("data-id"));
+        let checked = e.target.checked;
+        let oldAlarmIndex = this.findAlarmIndexById(id);
+        let oldAlarm = this.props.alarms[oldAlarmIndex];
+        this.props.updateAlarm(
+            oldAlarm.time.hour, 
+            oldAlarm.time.minute, 
+            oldAlarm.color.r,
+            oldAlarm.color.g,
+            oldAlarm.color.b,
+            oldAlarm.interactive,
+            checked,
+            oldAlarmIndex
+        );
+    }
+
+    onAlarmInteractiveToggle(e) {
+        let id = parseInt(e.target.getAttribute("data-id"));
+        let checked= e.target.checked;
+        let oldAlarmIndex = this.findAlarmIndexById(id);
+        let oldAlarm = this.props.alarms[oldAlarmIndex];
+        this.props.updateAlarm(
+            oldAlarm.time.hour, 
+            oldAlarm.time.minute, 
+            oldAlarm.color.r,
+            oldAlarm.color.g,
+            oldAlarm.color.b,
+            checked,
+            oldAlarm.enabled,
+            oldAlarmIndex
+        );
     }
 
     render() {
-        const DATA = [
-            [{hour: 11, minute: 34}, {r: 255, g: 0, b: 0}, true],
-            [{hour: 13, minute: 54}, {r: 0, g: 255, b: 0}, false],
-        ]
-
         let rows = [];
-        DATA.forEach(row => {
-            console.log(`rgb(${row[1].r}, ${row[1].g}, ${row[1].b});`);
+        this.props.alarms.forEach(row => {
+            console.log(`rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`);
             rows.push(
-                <tr>
-                    <td>
-                        { `${row[0].hour}:${row[0].minute}` }
-                    </td>
-                    <td>
-                        <div 
-                            className="ColorBox" 
-                            style={{
-                                backgroundColor: `rgb(${row[1].r}, ${row[1].g}, ${row[1].b})`,
-                                width: '30px',
-                                height: '12px',
-                                display: 'inline-block',
-                            }}
-                        />
-                    </td>
-                    <td>
-                        <input type="checkbox" checked={row[2]} onClick={ this.props.onAlarmToggle }/>
-                    </td>
-                    <td>
-                        <button>Remove</button>
-                    </td>
-                </tr>
+                <AlarmRow key={ row.id } row={ row } onAlarmEnabledToggle={ this.onAlarmEnabledToggle } onAlarmInteractiveToggle={ this.onAlarmInteractiveToggle } />
             )
         });
 
         return (
             <div className="Alarms">
                 <table>
-                    <tr>
-                        <th>Time</th>
-                        <th>Color</th>
-                        <th>Enabled</th> 
-                        <th>Remove</th>
-                    </tr>
-                    { rows }
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Color</th>
+                            <th>Interactive</th>
+                            <th>Enabled</th> 
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { rows }
+                    </tbody>
                 </table>
                 <br />
                 <div className="addAlarm">

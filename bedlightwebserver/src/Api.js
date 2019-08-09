@@ -37,6 +37,33 @@ class Api {
                 console.err(err);
             });
     }
+
+    addAlarm(hour, minute, r, g, b, interactive, enabled) {
+        fetch(`${this.baseUrl}/addAlarm?hour=${hour}&minute=${minute}&r=${r}&g=${g}&b=${b}&enabled=${enabled ? 1 : 0}&interactive=${interactive ? 1 : 0}`)
+            .catch(err => {
+                console.err(err);
+            });
+    }
+
+    deleteAlarm(id) {
+        fetch(`${this.baseUrl}/deleteAlarm?id=${id}`)
+            .catch(err => {
+                console.err(err);
+            });
+    }
+
+    async getAlarms() {
+        let resp = await fetch(`${this.baseUrl}/getAlarms`);
+        let data = await resp.json();
+        return data;
+    }
+
+    updateAlarm(hour, minute, r, g, b, interactive, enabled, id) {
+        fetch(`${this.baseUrl}/updateAlarm?hour=${hour}&minute=${minute}&r=${r}&g=${g}&b=${b}&enabled=${enabled ? 1 : 0}&interactive=${interactive ? 1 : 0}&id=${id}`)
+            .catch(err => {
+                console.err(err);
+            });
+    }
 }
 
 export default Api;

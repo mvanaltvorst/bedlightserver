@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/mvanaltvorst/bedlightserver/alarms"
 	"github.com/mvanaltvorst/bedlightserver/ledstrip"
 	"github.com/mvanaltvorst/bedlightserver/types"
 	"github.com/mvanaltvorst/bedlightserver/widgets"
@@ -96,7 +97,9 @@ func main() {
 	}
 	strip = ledstrip.NewStrip(esp8266ip)
 
-	go webserverManager()
+	alarmManager := alarms.AlarmManager{}
+
+	go webserverManager(&alarmManager)
 
 	strip.SetBgColor(types.Color{255, 147, 41}) // warm white, default
 	strip.SetRange(types.Color{0, 0, 0}, types.Range{0, NUM_LEDS - 1})
