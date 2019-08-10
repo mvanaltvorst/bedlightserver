@@ -8,7 +8,7 @@ class View extends React.Component {
     render() {
         return (
             <div className="View">
-                <h1>Controls</h1>
+                <h1>Manual controls</h1>
                 <OnOffControls onPowerChange={ this.props.onPowerChange }/>
                 <InteractiveControls onInteractiveChange={ this.props.onInteractiveChange } />
                 <ColorControls 
