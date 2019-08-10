@@ -15,6 +15,7 @@ func webserverManager(a *alarms.AlarmManager) {
 	alarmManager = a
 	fs := http.FileServer(http.Dir("/static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/", redirect)
 	http.HandleFunc("/turnOn", turnOnHandler)
 	http.HandleFunc("/turnOff", turnOffHandler)
 	http.HandleFunc("/readingLight", readingLightHandler)
@@ -26,6 +27,11 @@ func webserverManager(a *alarms.AlarmManager) {
 	http.HandleFunc("/updateAlarm", updateAlarmHandler)
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
+}
+
+func redirect(w http.ResponseWriter, r *http.Request) {
+
+    http.Redirect(w, r, "http://www.google.com", 301)
 }
 
 func addAlarmHandler(w http.ResponseWriter, r *http.Request) {

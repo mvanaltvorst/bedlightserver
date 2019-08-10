@@ -67,9 +67,9 @@ type Time struct {
 	Minute int `json:"minute"`
 }
 
-func (a *AlarmManager) HasAlarm(t time.Date) bool {
-	for alarm := a.alarms {
-		if alarm.Time.Hour == t.Hour() && alarm.Time.Minute == time.Minute { return true }
+func (a *AlarmManager) HasAlarm(t time.Time) bool {
+	for _, alarm := range a.alarms {
+		if alarm.Time.Hour == t.Hour() && alarm.Time.Minute == t.Minute() { return true }
 	}
 	return false
 }
