@@ -97,7 +97,7 @@ class Alarms extends React.Component {
         }
         let hour = parseInt(splittedTime[0]);
         let minute = parseInt(splittedTime[1]);
-        this.props.api.addAlarm(
+        await this.props.api.addAlarm(
             hour, 
             minute, 
             this.props.selectedColor.r, 

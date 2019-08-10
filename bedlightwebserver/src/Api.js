@@ -38,8 +38,8 @@ class Api {
             });
     }
 
-    addAlarm(hour, minute, r, g, b, interactive, enabled) {
-        fetch(`${this.baseUrl}/addAlarm?hour=${hour}&minute=${minute}&r=${r}&g=${g}&b=${b}&enabled=${enabled ? 1 : 0}&interactive=${interactive ? 1 : 0}`)
+    async addAlarm(hour, minute, r, g, b, interactive, enabled) {
+        return fetch(`${this.baseUrl}/addAlarm?hour=${hour}&minute=${minute}&r=${r}&g=${g}&b=${b}&enabled=${enabled ? 1 : 0}&interactive=${interactive ? 1 : 0}`)
             .catch(err => {
                 console.err(err);
             });
