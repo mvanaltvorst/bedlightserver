@@ -26,7 +26,7 @@ function AlarmRow(props) {
     let row = props.row;
     return (
         <tr>
-            <td align="left">
+            <td align="left" class="TimeView">
                 { `${('0' + row.time.hour).slice(-2)}:${('0' + row.time.minute).slice(-2)}` }
             </td>
             <td align="middle">

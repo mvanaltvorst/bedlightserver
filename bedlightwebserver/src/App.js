@@ -10,7 +10,7 @@ class App extends React.Component {
       bgColor: {r: 255, g: 255, b: 255},
       turnedOn: true,
       interactiveMode: true,
-      liveUpdate: false,
+      liveUpdate: true,
     };
 
     this.handlePowerChange = this.handlePowerChange.bind(this);
