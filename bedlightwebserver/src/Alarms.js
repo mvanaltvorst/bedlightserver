@@ -1,9 +1,9 @@
 import React from 'react';
+import Switch from 'react-switch';
 
 function findAlarmIndexById(alarms, id) {
     let nalarms = alarms.length
     for (let i = 0; i < nalarms; i++) {
-        console.log(alarms[i].id, " ", id);
         if (alarms[i].id === id) {
             return i;
         }
@@ -26,10 +26,10 @@ function AlarmRow(props) {
     let row = props.row;
     return (
         <tr>
-            <td>
-                { `${row.time.hour}:${row.time.minute}` }
+            <td align="left">
+                { `${('0' + row.time.hour).slice(-2)}:${('0' + row.time.minute).slice(-2)}` }
             </td>
-            <td>
+            <td align="middle">
                 <div 
                     className="ColorBox" 
                     style={{
@@ -38,29 +38,67 @@ function AlarmRow(props) {
                     onClick={ () => props.setSelectedColorAndUpdate({rgb: {r: row.color.r, g: row.color.g, b: row.color.b}}) }
                 />
             </td>
-            <td>
-                <input type="checkbox" data-id={ row.id } checked={row.interactive} onChange={ props.onAlarmInteractiveToggle }/>
+            <td align="middle">
+                {/* <input type="checkbox" data-id={ row.id } checked={row.interactive} onChange={ props.onAlarmInteractiveToggle }/> */}
+                <Switch 
+                    id={ row.id } 
+                    checked={ row.interactive } 
+                    onChange={ props.onAlarmInteractiveToggle }
+                    onColor="#86d3ff"
+                    onHandleColor="#2693e6"
+                    handleDiameter={25}
+                    uncheckedIcon={false}
+                    checkedIcon={true}
+                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.5)"
+                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                    height={18}
+                    width={42}
+                />
             </td>
-            <td>
-                <input type="checkbox" data-id={ row.id } checked={row.enabled} onChange={ props.onAlarmEnabledToggle }/>
+            <td align="middle">
+                {/* <input type="checkbox" data-id={ row.id } checked={row.enabled} onChange={ props.onAlarmEnabledToggle }/> */}
+                <Switch 
+                    id={ row.id } 
+                    checked={ row.enabled } 
+                    onChange={ props.onAlarmEnabledToggle } 
+                    onColor="#86d3ff"
+                    onHandleColor="#2693e6"
+                    handleDiameter={25}
+                    uncheckedIcon={false}
+                    checkedIcon={true}
+                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.5)"
+                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                    height={18}
+                    width={42}
+                />
             </td>
-            <td>
+            <td align="right">
                 <button onClick={ () => props.deleteAlarm(row.id) }>Remove</button>
             </td>
         </tr>
     );
 }
 
+// class Alarm extends React.Component {
+//     render() {
+//         return (
+//             <div className="Alarm">
+
+//             </div>
+//         );
+//     }
+// }
+
 class Alarms extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            alarms: [{time: {hour: 11, minute: 34}, color: {r: 255, g: 0, b: 0}, interactive: true, enabled: true, id: 1}],
+            // alarms: [],
+            alarms: [{"time":{"hour":9,"minute":0},"color":{"r":80,"g":227,"b":194},"interactive":false,"enabled":true,"id":1},{"time":{"hour":9,"minute":30},"color":{"r":255,"g":147,"b":89},"interactive":true,"enabled":true,"id":3},{"time":{"hour":20,"minute":0},"color":{"r":255,"g":74,"b":0},"interactive":false,"enabled":true,"id":4},{"time":{"hour":21,"minute":0},"color":{"r":255,"g":65,"b":0},"interactive":false,"enabled":true,"id":5},{"time":{"hour":23,"minute":0},"color":{"r":255,"g":50,"b":0},"interactive":false,"enabled":true,"id":6},{"time":{"hour":12,"minute":59},"color":{"r":229,"g":79,"b":79},"interactive":true,"enabled":true,"id":7},{"time":{"hour":12,"minute":52},"color":{"r":255,"g":255,"b":255},"interactive":false,"enabled":true,"id":8},{"time":{"hour":4,"minute":1},"color":{"r":76,"g":27,"b":27},"interactive":false,"enabled":true,"id":9},{"time":{"hour":4,"minute":1},"color":{"r":76,"g":27,"b":27},"interactive":false,"enabled":true,"id":10}],
             newTime: "",
             newInteractive: false,
             newEnabled: true,
-            // alarms: [],
             newAlarmError: "",
         }
 
@@ -89,7 +127,6 @@ class Alarms extends React.Component {
     }
 
     async addAlarm(e) {
-        // this.state.alarms
         let splittedTime = this.state.newTime.split(":");
         if (splittedTime.length < 2) { // time wasn't filled out
             this.setState({ newAlarmError: "Time wasn't filled in" });
@@ -117,12 +154,11 @@ class Alarms extends React.Component {
             state.alarms[index] = {time: {hour: hour, minute: minute}, color: {r: r, g: g, b: b}, enabled: enabled, interactive: interactive, id: id};
             return state;
         });
-        console.log(this.state.alarms);
       }
 
-    onAlarmEnabledToggle(e) {
-        let id = parseInt(e.target.getAttribute("data-id"));
-        let checked = e.target.checked;
+    onAlarmEnabledToggle(checked, _, id) {
+        // let id = parseInt(e.target.getAttribute("data-id"));
+        // let checked = e.target.checked;
         let oldAlarmIndex = findAlarmIndexById(this.state.alarms, id);
         let oldAlarm = this.state.alarms[oldAlarmIndex];
         this.updateAlarm(
@@ -137,9 +173,9 @@ class Alarms extends React.Component {
         );
     }
 
-    onAlarmInteractiveToggle(e) {
-        let id = parseInt(e.target.getAttribute("data-id"));
-        let checked= e.target.checked;
+    onAlarmInteractiveToggle(checked, _, id) {
+        // let id = parseInt(e.target.getAttribute("data-id"));
+        // let checked= e.target.checked;
         let oldAlarmIndex = findAlarmIndexById(this.state.alarms, id);
         let oldAlarm = this.state.alarms[oldAlarmIndex];
         this.updateAlarm(
@@ -163,12 +199,12 @@ class Alarms extends React.Component {
         });
     }
 
-    updateNewInteractive(e) {
-        this.setState({newInteractive: e.target.checked});
+    updateNewInteractive(checked) {
+        this.setState({newInteractive: checked});
     }
 
-    updateNewEnabled(e) {
-        this.setState({newEnabled: e.target.checked});
+    updateNewEnabled(checked) {
+        this.setState({newEnabled: checked});
     }
 
     updateNewTime(e) {
@@ -178,7 +214,6 @@ class Alarms extends React.Component {
     render() {
         let rows = [];
         this.state.alarms.forEach(row => {
-            console.log(`rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`);
             rows.push(
                 <AlarmRow 
                     key={ row.id } 
@@ -188,39 +223,84 @@ class Alarms extends React.Component {
                     deleteAlarm={ this.deleteAlarm }
                     setSelectedColorAndUpdate={ this.props.setSelectedColorAndUpdate }
                 />
+                // <li>
+                //     <Alarm
+                //         key={ row.id } 
+                //         row={ row } 
+                //         onAlarmEnabledToggle={ this.onAlarmEnabledToggle } 
+                //         onAlarmInteractiveToggle={ this.onAlarmInteractiveToggle } 
+                //         deleteAlarm={ this.deleteAlarm }
+                //         setSelectedColorAndUpdate={ this.props.setSelectedColorAndUpdate }
+                //     />
+                // </li>
             )
         });
 
         return (
             <div className="Alarms">
+                {/* <ul>
+                    { rows }
+                </ul> */}
                 <table>
                     <thead>
                         <tr>
-                            <th>Time</th>
+                            <th align="left">Time</th>
                             <th>Color</th>
                             <th>Interactive</th>
                             <th>Enabled</th> 
-                            <th>Remove</th>
+                            {/* <th align="right"></th> */}
                         </tr>
                     </thead>
                     <tbody>
                         { rows }
+                        <tr>
+                            <td>
+                                <input type="time" id="newAlarmTime" onChange={ this.updateNewTime } />
+                            </td>
+                            <td align="middle">
+                                <div 
+                                    className="ColorBox" 
+                                    style={{
+                                        backgroundColor: `rgb(${this.props.selectedColor.r}, ${this.props.selectedColor.g}, ${this.props.selectedColor.b})`
+                                    }}
+                                />
+                            </td>
+                            <td align="middle">
+                                <Switch 
+                                    checked={ this.state.newInteractive } 
+                                    onChange={ this.updateNewInteractive } 
+                                    onColor="#86d3ff"
+                                    onHandleColor="#2693e6"
+                                    handleDiameter={25}
+                                    uncheckedIcon={false}
+                                    checkedIcon={true}
+                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.5)"
+                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                    height={18}
+                                    width={42}
+                                />
+                            </td>
+                            <td align="middle">
+                                <Switch 
+                                    checked={ this.state.newEnabled } 
+                                    onChange={ this.updateNewEnabled } 
+                                    onColor="#86d3ff"
+                                    onHandleColor="#2693e6"
+                                    handleDiameter={25}
+                                    uncheckedIcon={false}
+                                    checkedIcon={true}
+                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.5)"
+                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                    height={18}
+                                    width={42}
+                                />
+                            </td>
+                            <td align="right">
+                                <button onClick={ this.addAlarm }>Add new alarm</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-                <br />
-                <br />
-                <div className="AddAlarm">
-                    <input type="time" id="newAlarmTime" onChange={ this.updateNewTime } />
-                    <div 
-                        className="ColorBox" 
-                        style={{
-                            backgroundColor: `rgb(${this.props.selectedColor.r}, ${this.props.selectedColor.g}, ${this.props.selectedColor.b})`
-                        }}
-                    />
-                    <input type="checkbox" checked={ this.state.newInteractive } onChange={ this.updateNewInteractive } />
-                    <input type="checkbox" checked={ this.state.newEnabled } onChange={ this.updateNewEnabled } />
-                    <button onClick={ this.addAlarm }>Add new alarm</button>
-                </div>
                 <Error value={ this.state.newAlarmError } />
             </div>
         );

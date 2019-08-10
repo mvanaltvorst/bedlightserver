@@ -57,16 +57,6 @@ h1 {
   width: 100%;
 }
 
-.Alarms tr {
-  display: flex;
-  justify-content: space-between;
-}
-
-.AddAlarm {
-  display: flex;
-  justify-content: space-between;
-}
-
 .Error {
   padding: 10px;
   background-color: #FFBABA;

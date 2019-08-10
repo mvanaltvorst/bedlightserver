@@ -1,13 +1,14 @@
 {
   "name": "bedlightwebserver",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "fetch": "^1.1.0",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "react-switch": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,6 +30,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "homepage": "http://localhost:8080/static/"
+  }
 }
