@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,12 +9,11 @@ import (
 	"github.com/mvanaltvorst/bedlightserver/types"
 )
 
-var templates = template.Must(template.ParseFiles("/go/src/github.com/mvanaltvorst/bedlightserver/app/index.html"))
 var alarmManager *alarms.AlarmManager
 
 func webserverManager(a *alarms.AlarmManager) {
 	alarmManager = a
-	fs := http.FileServer(http.Dir("./bedlightwebserver/build"))
+	fs := http.FileServer(http.Dir("/static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/turnOn", turnOnHandler)
 	http.HandleFunc("/turnOff", turnOffHandler)
@@ -134,7 +132,7 @@ func addAlarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	alarmManager.AddAlarm(hour, minute, red, green, blue, interactive != 0, enabled != 0)
+	alarmManager.AddAlarm(hour, minute, byte(red), byte(green), byte(blue), interactive != 0, enabled != 0)
 }
 
 func updateAlarmHandler(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +253,11 @@ func updateAlarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	alarmManager.UpdateAlarm(hour, minute, red, green, blue, interactive != 0, enabled != 0, id)
+	err = alarmManager.UpdateAlarm(hour, minute, byte(red), byte(green), byte(blue), interactive != 0, enabled != 0, id)
+	if err != nil {
+		http.Error(w, "Couldn't find ID", http.StatusInternalServerError)
+		return
+	}
 }
 
 func deleteAlarmHandler(w http.ResponseWriter, r *http.Request) {
@@ -318,15 +320,6 @@ func interactiveLightHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Interactive light")
 	globalState = INTERACTIVELIGHT
 	updateStripInteractive()
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Got index hit")
-	err := templates.ExecuteTemplate(w, "index.html", nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
 
 func bgColorHandler(w http.ResponseWriter, r *http.Request) {

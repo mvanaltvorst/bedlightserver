@@ -10,8 +10,8 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
 
 EXPOSE 8080
 
-# COPY ./app ./ledstrip ./types ./widgets ./go.mod ./go.sum /go/src/github.com/mvanaltvorst/bedlightserver/
-COPY . /go/src/github.com/mvanaltvorst/bedlightserver/
+COPY ./src ./
+# COPY . /go/src/github.com/mvanaltvorst/bedlightserver/
 
 RUN go get -d -v ./...
 RUN go install -v ./...

@@ -11,12 +11,22 @@ class View extends React.Component {
                 <h1>Controls</h1>
                 <OnOffControls onPowerChange={ this.props.onPowerChange }/>
                 <InteractiveControls onInteractiveChange={ this.props.onInteractiveChange } />
-                <ColorControls bgColor={ this.props.bgColor } onColorChange={ this.props.onColorChange } updateColor={ this.props.updateColor }/>
+                <ColorControls 
+                    bgColor={ this.props.bgColor }
+                    onColorChange={ this.props.onColorChange }
+                    updateColor={ this.props.updateColor }
+                    liveUpdate={ this.props.liveUpdate }
+                    setLiveUpdate={ this.props.setLiveUpdate }
+                />
                 <h1>Alarms</h1>
                 <Alarms 
                     alarms={ this.props.alarms }
                     updateAlarm={ this.props.updateAlarm }
                     selectedColor={ this.props.bgColor }
+                    api={ this.props.api }
+                    setSelectedColor={ this.props.onColorChange }
+                    liveUpdate={ this.props.liveUpdate }
+                    updateColor={ this.props.updateColor }
                 />
             </div>
         );

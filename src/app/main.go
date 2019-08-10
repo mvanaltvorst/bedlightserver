@@ -22,6 +22,7 @@ var turnedOn bool
 
 var globalState int
 var c = make(chan widgets.LightMessage)
+var d = make(chan alarms.Alarm)
 var strip *ledstrip.Strip
 
 var widgetsList = []widgets.Widget{
@@ -30,7 +31,7 @@ var widgetsList = []widgets.Widget{
 	widgets.NewStockWidget(c, types.Range{0, 17}, "GOOG", false),
 }
 
-func watch() {
+func watchLightMessage() {
 	var err error
 	for lm := range c {
 		// We try to push a request through 3 times maximum, then we panic()
@@ -66,6 +67,23 @@ func watch() {
 	}
 }
 
+func watchAlarms() {
+	for alarm := range d {
+		log.Println("Executing alarm...")
+		strip.SetBgColor(alarm.Color)
+		if alarm.Interactive {
+			log.Println("Doing interactive update")
+			updateStripInteractive()
+			globalState = INTERACTIVELIGHT
+		} else {
+			log.Println("Doing non-interactive update")
+			strip.ClearRange(types.Range{0, NUM_LEDS - 1})
+			strip.Gradient()
+			globalState = CLEARLIGHT
+		}
+	}
+}
+
 func updateStripInteractive() {
 	for _, widget := range widgetsList {
 		widget.Update()
@@ -97,7 +115,8 @@ func main() {
 	}
 	strip = ledstrip.NewStrip(esp8266ip)
 
-	alarmManager := alarms.AlarmManager{}
+	d = make(chan alarms.Alarm)
+	alarmManager := alarms.NewAlarmManager(d)
 
 	go webserverManager(&alarmManager)
 
@@ -105,10 +124,14 @@ func main() {
 	strip.SetRange(types.Color{0, 0, 0}, types.Range{0, NUM_LEDS - 1})
 	strip.TurnOn()
 
-	go watch()
+	go watchLightMessage()
+	go watchAlarms()
+	go alarmManager.Watch()
 
 	for {
-		updateStripInteractive()
+		if !alarmManager.HasAlarm(time.Now()) {
+			updateStripInteractive()
+		}
 		t := time.Now()
 		roundedMinute := ((t.Minute() + 1) / 15) * 15
 		nextTick := time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), roundedMinute, 0, 0, t.Location())

@@ -10,7 +10,6 @@
 .App {
   /* text-align: center; */
   padding: 30px;
-  padding-top: 8px;
 }
 
 h1 {
@@ -55,13 +54,38 @@ h1 {
 }
 
 .Alarms table {
-  width: 50%;
+  width: 100%;
 }
 
 .Alarms tr {
   display: flex;
   justify-content: space-between;
 }
+
+.AddAlarm {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Error {
+  padding: 10px;
+  background-color: #FFBABA;
+  /* border: 1px solid #FF0000; */
+  color: #D8000C;
+  border-radius: 3px;
+  margin-top: 15px;
+}
+
+.ColorBox {
+  width: 16px;
+  height: 16px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+  border-radius: 3px;
+  display: inline-block;
+  cursor: hand;
+}
+
+
 /* 
 button {
   width: 100%;

@@ -13,6 +13,8 @@ import (
 	"io/ioutil"
 )
 
+const THRESHOLD = 0.12
+
 var (
 	COLOR_RAIN   = types.Color{0, 179, 255}
 	COLOR_CLOUDY = types.Color{75, 0, 130}
@@ -45,7 +47,7 @@ func GetWeatherColor(latitude, longitude string) (types.Color, error) {
 		}
 
 		log.Println("accumulated rain: ", accRain)
-		if accRain > 0.1 {
+		if accRain > THRESHOLD {
 			return COLOR_RAIN, nil
 		} else {
 			return COLOR_SUNNY, nil

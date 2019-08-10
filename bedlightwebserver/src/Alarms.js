@@ -1,5 +1,26 @@
 import React from 'react';
 
+function findAlarmIndexById(alarms, id) {
+    let nalarms = alarms.length
+    for (let i = 0; i < nalarms; i++) {
+        console.log(alarms[i].id, " ", id);
+        if (alarms[i].id === id) {
+            return i;
+        }
+    }
+}
+
+function Error(props) {
+    if (props.value === "") {
+        return null;
+    } else {
+        return (
+            <div class="Error">
+                { props.value }
+            </div>
+        );
+    }
+}
 
 function AlarmRow(props) {
     let row = props.row;
@@ -13,10 +34,8 @@ function AlarmRow(props) {
                     className="ColorBox" 
                     style={{
                         backgroundColor: `rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`,
-                        width: '30px',
-                        height: '12px',
-                        display: 'inline-block',
                     }}
+                    onClick={ () => props.setSelectedColor({rgb: {r: row.color.r, g: row.color.g, b: row.color.b}}) }
                 />
             </td>
             <td>
@@ -26,7 +45,7 @@ function AlarmRow(props) {
                 <input type="checkbox" data-id={ row.id } checked={row.enabled} onChange={ props.onAlarmEnabledToggle }/>
             </td>
             <td>
-                <button>Remove</button>
+                <button onClick={ () => props.deleteAlarm(row.id) }>Remove</button>
             </td>
         </tr>
     );
@@ -36,31 +55,83 @@ class Alarms extends React.Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            alarms: [{time: {hour: 11, minute: 34}, color: {r: 255, g: 0, b: 0}, interactive: true, enabled: true, id: 1}],
+            newTime: "",
+            newInteractive: false,
+            newEnabled: true,
+            // alarms: [],
+            newAlarmError: "",
+        }
+
         this.addAlarm = this.addAlarm.bind(this);
+        this.updateAlarm = this.updateAlarm.bind(this);
         this.onAlarmEnabledToggle = this.onAlarmEnabledToggle.bind(this);
         this.onAlarmInteractiveToggle = this.onAlarmInteractiveToggle.bind(this);
+        this.deleteAlarm = this.deleteAlarm.bind(this);
+        this.updateNewInteractive = this.updateNewInteractive.bind(this);
+        this.updateNewEnabled = this.updateNewEnabled.bind(this);
+        this.updateNewTime = this.updateNewTime.bind(this);
+        this.setColor = this.setColor.bind(this);
     }
 
-    findAlarmIndexById(id) {
-        let nalarms = this.props.alarms.length
-        for (let i = 0; i < nalarms; i++) {
-            console.log(this.props.alarms[i].id, " ", id);
-            if (this.props.alarms[i].id == id) {
-                return i;
-            }
+    async updateAlarmsFromServer() {
+        let alarms = await this.props.api.getAlarms();
+        console.log(alarms);
+        if (alarms == null) {
+            this.setState({ alarms: [], newAlarmError: "" });
+        } else {
+            this.setState({ alarms: alarms, newAlarmError: "" });
         }
     }
-
-    addAlarm() {
-        // this.props.alarms
+    
+    async componentWillMount() {
+        await this.updateAlarmsFromServer();
     }
+
+    setColor(color) {
+        this.props.setSelectedColor(color);
+        if (this.props.liveUpdate) this.props.updateColor();
+    }
+
+    async addAlarm(e) {
+        // this.state.alarms
+        let splittedTime = this.state.newTime.split(":");
+        if (splittedTime.length < 2) { // time wasn't filled out
+            this.setState({ newAlarmError: "Time wasn't filled in" });
+            return;
+        }
+        let hour = parseInt(splittedTime[0]);
+        let minute = parseInt(splittedTime[1]);
+        this.props.api.addAlarm(
+            hour, 
+            minute, 
+            this.props.selectedColor.r, 
+            this.props.selectedColor.g, 
+            this.props.selectedColor.b, 
+            this.state.newInteractive,
+            this.state.newEnabled
+        )
+        await this.updateAlarmsFromServer();
+    }
+
+    updateAlarm(hour, minute, r, g, b, interactive, enabled, id) {
+        console.log("Updating alarm")
+        this.props.api.updateAlarm(hour, minute, r, g, b, interactive, enabled, id);
+        this.setState(state => {
+            let index = findAlarmIndexById(state.alarms, id);
+            state.alarms[index] = {time: {hour: hour, minute: minute}, color: {r: r, g: g, b: b}, enabled: enabled, interactive: interactive, id: id};
+            return state;
+        });
+        console.log(this.state.alarms);
+      }
 
     onAlarmEnabledToggle(e) {
         let id = parseInt(e.target.getAttribute("data-id"));
         let checked = e.target.checked;
-        let oldAlarmIndex = this.findAlarmIndexById(id);
-        let oldAlarm = this.props.alarms[oldAlarmIndex];
-        this.props.updateAlarm(
+        let oldAlarmIndex = findAlarmIndexById(this.state.alarms, id);
+        let oldAlarm = this.state.alarms[oldAlarmIndex];
+        this.updateAlarm(
             oldAlarm.time.hour, 
             oldAlarm.time.minute, 
             oldAlarm.color.r,
@@ -68,16 +139,16 @@ class Alarms extends React.Component {
             oldAlarm.color.b,
             oldAlarm.interactive,
             checked,
-            oldAlarmIndex
+            id
         );
     }
 
     onAlarmInteractiveToggle(e) {
         let id = parseInt(e.target.getAttribute("data-id"));
         let checked= e.target.checked;
-        let oldAlarmIndex = this.findAlarmIndexById(id);
-        let oldAlarm = this.props.alarms[oldAlarmIndex];
-        this.props.updateAlarm(
+        let oldAlarmIndex = findAlarmIndexById(this.state.alarms, id);
+        let oldAlarm = this.state.alarms[oldAlarmIndex];
+        this.updateAlarm(
             oldAlarm.time.hour, 
             oldAlarm.time.minute, 
             oldAlarm.color.r,
@@ -85,16 +156,44 @@ class Alarms extends React.Component {
             oldAlarm.color.b,
             checked,
             oldAlarm.enabled,
-            oldAlarmIndex
+            id
         );
+    }
+
+    deleteAlarm(id) {
+        this.props.api.deleteAlarm(id);
+        this.setState(state => {
+            let index = findAlarmIndexById(state.alarms, id);
+            state.alarms.splice(index, 1)
+            return state;
+        });
+    }
+
+    updateNewInteractive(e) {
+        this.setState({newInteractive: e.target.checked});
+    }
+
+    updateNewEnabled(e) {
+        this.setState({newEnabled: e.target.checked});
+    }
+
+    updateNewTime(e) {
+        this.setState({newTime: e.target.value });
     }
 
     render() {
         let rows = [];
-        this.props.alarms.forEach(row => {
+        this.state.alarms.forEach(row => {
             console.log(`rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`);
             rows.push(
-                <AlarmRow key={ row.id } row={ row } onAlarmEnabledToggle={ this.onAlarmEnabledToggle } onAlarmInteractiveToggle={ this.onAlarmInteractiveToggle } />
+                <AlarmRow 
+                    key={ row.id } 
+                    row={ row } 
+                    onAlarmEnabledToggle={ this.onAlarmEnabledToggle } 
+                    onAlarmInteractiveToggle={ this.onAlarmInteractiveToggle } 
+                    deleteAlarm={ this.deleteAlarm }
+                    setSelectedColor={ this.setColor }
+                />
             )
         });
 
@@ -115,20 +214,20 @@ class Alarms extends React.Component {
                     </tbody>
                 </table>
                 <br />
-                <div className="addAlarm">
-                    <input type="time" id="newAlarmTime" />
+                <br />
+                <div className="AddAlarm">
+                    <input type="time" id="newAlarmTime" onChange={ this.updateNewTime } />
                     <div 
                         className="ColorBox" 
-                        style={ {
-                            backgroundColor: `rgb(${this.props.selectedColor.r}, ${this.props.selectedColor.g}, ${this.props.selectedColor.b})`,
-                            width: '30px',
-                            height: '12px',
-                            display: 'inline-block',
-                        } }
+                        style={{
+                            backgroundColor: `rgb(${this.props.selectedColor.r}, ${this.props.selectedColor.g}, ${this.props.selectedColor.b})`
+                        }}
                     />
-                    <input type="checkbox" id="newAlarmEnabled" />
+                    <input type="checkbox" checked={ this.state.newInteractive } onChange={ this.updateNewInteractive } />
+                    <input type="checkbox" checked={ this.state.newEnabled } onChange={ this.updateNewEnabled } />
                     <button onClick={ this.addAlarm }>Add new alarm</button>
                 </div>
+                <Error value={ this.state.newAlarmError } />
             </div>
         );
     }

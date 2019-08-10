@@ -1,3 +1,4 @@
-app/app
+src/app/app
 .devcontainer.json
 coordinates
+storedAlarms/*

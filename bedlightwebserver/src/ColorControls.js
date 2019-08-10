@@ -18,22 +18,18 @@ const PRESET_COLORS = [
 class ColorControls extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            liveUpdate: false
-        }
 
         this.handleChangeLiveUpdate = this.handleChangeLiveUpdate.bind(this);
         this.handleColorChange = this.handleColorChange.bind(this);
     }
 
     handleChangeLiveUpdate(e) {
-        console.log("Setting live update to", e.target.checked);
-        this.setState({ liveUpdate: e.target.checked })
+        this.props.setLiveUpdate(e.target.checked)
     }
 
     handleColorChange(color) {
         this.props.onColorChange(color);
-        if (this.state.liveUpdate) this.props.updateColor();
+        if (this.props.liveUpdate) this.props.updateColor();
     }
 
     render() {
@@ -48,7 +44,7 @@ class ColorControls extends React.Component {
                 />
                 <br/>
                 <div className="ColorControlsButtons">
-                    <span><input type="checkbox" defaultChecked={ this.state.liveUpdate } onChange={ this.handleChangeLiveUpdate }/> Live update </span>
+                    <span><input type="checkbox" defaultChecked={ this.props.liveUpdate } onChange={ this.handleChangeLiveUpdate }/> Live update </span>
                     <button onClick={ this.props.updateColor }>Refresh</button>
                 </div>
             </div>

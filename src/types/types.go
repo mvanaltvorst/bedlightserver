@@ -1,9 +1,9 @@
 package types
 
 type Color struct {
-	R byte
-	G byte
-	B byte
+	R byte `json:"r"`
+	G byte `json:"g"`
+	B byte `json:"b"`
 }
 
 type Range struct {
