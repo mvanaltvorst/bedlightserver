@@ -20,12 +20,9 @@ class View extends React.Component {
                 />
                 <h1>Alarms</h1>
                 <Alarms 
-                    alarms={ this.props.alarms }
-                    updateAlarm={ this.props.updateAlarm }
                     selectedColor={ this.props.bgColor }
                     api={ this.props.api }
-                    setSelectedColor={ this.props.onColorChange }
-                    liveUpdate={ this.props.liveUpdate }
+                    setSelectedColorAndUpdate={ this.props.setSelectedColorAndUpdate }
                     updateColor={ this.props.updateColor }
                 />
             </div>

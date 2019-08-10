@@ -35,7 +35,7 @@ function AlarmRow(props) {
                     style={{
                         backgroundColor: `rgb(${row.color.r}, ${row.color.g}, ${row.color.b})`,
                     }}
-                    onClick={ () => props.setSelectedColor({rgb: {r: row.color.r, g: row.color.g, b: row.color.b}}) }
+                    onClick={ () => props.setSelectedColorAndUpdate({rgb: {r: row.color.r, g: row.color.g, b: row.color.b}}) }
                 />
             </td>
             <td>
@@ -72,7 +72,6 @@ class Alarms extends React.Component {
         this.updateNewInteractive = this.updateNewInteractive.bind(this);
         this.updateNewEnabled = this.updateNewEnabled.bind(this);
         this.updateNewTime = this.updateNewTime.bind(this);
-        this.setColor = this.setColor.bind(this);
     }
 
     async updateAlarmsFromServer() {
@@ -87,11 +86,6 @@ class Alarms extends React.Component {
     
     async componentWillMount() {
         await this.updateAlarmsFromServer();
-    }
-
-    setColor(color) {
-        this.props.setSelectedColor(color);
-        if (this.props.liveUpdate) this.props.updateColor();
     }
 
     async addAlarm(e) {
@@ -192,7 +186,7 @@ class Alarms extends React.Component {
                     onAlarmEnabledToggle={ this.onAlarmEnabledToggle } 
                     onAlarmInteractiveToggle={ this.onAlarmInteractiveToggle } 
                     deleteAlarm={ this.deleteAlarm }
-                    setSelectedColor={ this.setColor }
+                    setSelectedColorAndUpdate={ this.props.setSelectedColorAndUpdate }
                 />
             )
         });

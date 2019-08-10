@@ -11,8 +11,6 @@ class App extends React.Component {
       turnedOn: true,
       interactiveMode: true,
       liveUpdate: false,
-      // alarms: [{time: {hour: 11, minute: 34}, color: {r: 255, g: 0, b: 0}, interactive: true, enabled: true, id: 1}],
-      // alarms: [],
     };
 
     this.handlePowerChange = this.handlePowerChange.bind(this);
@@ -20,6 +18,7 @@ class App extends React.Component {
     this.handleInteractiveChange = this.handleInteractiveChange.bind(this);
     this.updateColor = this.updateColor.bind(this);
     this.setLiveUpdate = this.setLiveUpdate.bind(this);
+    this.setSelectedColorAndUpdate = this.setSelectedColorAndUpdate.bind(this);
 
     this.api = new Api(window.location.origin);
   }
@@ -35,6 +34,15 @@ class App extends React.Component {
     this.setState({ bgColor: {r: color.rgb.r, g: color.rgb.g, b: color.rgb.b}});
   }
 
+  setSelectedColorAndUpdate(color) {
+    this.setState(
+      { bgColor: {r: color.rgb.r, g: color.rgb.g, b: color.rgb.b}},
+      () => {
+        if (this.state.liveUpdate) this.updateColor();
+      }
+    );
+  }
+
   handleInteractiveChange(interactive) {
     console.log(`Turning interactive ${interactive ? "on" : "off"}`)
     this.setState({ interactiveMode: interactive });
@@ -43,7 +51,7 @@ class App extends React.Component {
 
   updateColor() {
     // push color through to API
-    console.log("Pushing color to API");
+    console.log("Pushing color to API", this.state.bgColor);
     this.api.setBgColor(this.state.bgColor);
   }
 
@@ -65,6 +73,7 @@ class App extends React.Component {
           api={ this.api }
           liveUpdate={ this.state.liveUpdate }
           setLiveUpdate={ this.setLiveUpdate }
+          setSelectedColorAndUpdate={ this.setSelectedColorAndUpdate }
         />
       </div>
     );
