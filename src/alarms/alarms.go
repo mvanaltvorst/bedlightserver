@@ -157,7 +157,7 @@ func (a *AlarmManager) FindNextAlarm() (Alarm, time.Duration) {
 
 	if smallestDiff == 24*time.Hour {
 		endOfDay := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, 0, t.Location())
-		smallestDiff := endOfDay.Sub(t) + smallestAlarm.Time.Hour * time.Hour + smallestAlarm.Time.Minute * time.Minute
+		smallestDiff := endOfDay.Sub(t) + time.Duration(smallestAlarm.Time.Hour) * time.Hour + time.Duration(smallestAlarm.Time.Minute) * time.Minute
 		return smallestAlarm, smallestDiff
 	}
 
