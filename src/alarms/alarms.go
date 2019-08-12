@@ -137,6 +137,8 @@ func (a *AlarmManager) FindNextAlarm() (Alarm, time.Duration) {
 	t := time.Now();
 	smallestDiff := 24 * time.Hour
 	var nextAlarm Alarm
+	smallestAbsoluteTime := 24 * 60
+	var smallestAlarm Alarm
 	for _, alarm := range a.alarms {
 		// func Date(year int, month Month, day, hour, min, sec, nsec int, loc *Location) Time
 		if !alarm.Enabled { continue }
@@ -146,6 +148,17 @@ func (a *AlarmManager) FindNextAlarm() (Alarm, time.Duration) {
 			smallestDiff = diff
 			nextAlarm = alarm
 		}
+		absoluteTime := 60*alarm.Time.Hour + alarm.Time.Minute
+		if absoluteTime < smallestAbsoluteTime {
+			smallestAbsoluteTime = absoluteTime
+			smallestAlarm = alarm
+		}
+	}
+
+	if smallestDiff == 24*time.Hour {
+		endOfDay := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, 0, t.Location())
+		smallestDiff := endOfDay.Sub(t) + smallestAlarm.Time.Hour * time.Hour + smallestAlarm.Time.Minute * time.Minute
+		return smallestAlarm, smallestDiff
 	}
 
 	return nextAlarm, smallestDiff
